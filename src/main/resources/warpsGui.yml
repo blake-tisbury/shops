@@ -1,0 +1,38 @@
+title: "&c&lShop Warps"
+size: 45
+
+format:
+  - '# # # # # # # # #'
+  - '# # # # # # # # #'
+  - '# # # # # # # # #'
+  - '# # # # # # # # #'
+  - '$ $ $ < & > $ $ $'
+
+nextPage: 41
+previous: 39
+close: 40
+
+items:
+  '$':
+    material: GRAY_STAINED_GLASS_PANE
+    amount: 1
+    name: ""
+    lore: ""
+  '<':
+    material: ARROW
+    amount: 1
+    name: "&c&lPrevious Page"
+    lore:
+      - "&7&o(( Click here to go back a page ))"
+  '>':
+    material: ARROW
+    amount: 1
+    name: "&c&lNext Page"
+    lore:
+      - "&7&o(( Click here to go forward a page ))"
+  '&':
+    material: BARRIER
+    amount: 1
+    name: "&c&lClose"
+    lore:
+      - "&7&o(( Click here to close ))"

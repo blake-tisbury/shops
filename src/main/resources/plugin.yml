@@ -1,0 +1,9 @@
+name: Shops
+version: ${project.version}
+main: shops.Shops
+api-version: 1.16
+authors: [ Mason ]
+description: ShopPlugin
+website: masonking.dev
+commands:
+  shops:

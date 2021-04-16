@@ -1,0 +1,37 @@
+#Mysql:
+host: localhost
+port: 3306
+database: shops
+username: root
+password: password
+
+unclaimedName: "&c&lUnclaimed lot"
+unclaimedLore:
+  - ""
+  - "&7Purchase this lot to"
+  - "&7Create your personal shop"
+  - ""
+  - "&c&lId: &7{id}"
+  - "&c&lCost: &7{price}"
+  - "&7&o(( Right-Click to purchase ))"
+claimedName: "&c&l{name}"
+claimedLore:
+    - ""
+    - "&c&lOwner&7: {player}"
+    - "&c&lId&7: {id}"
+    - "&c&lDescription&7: {description}"
+    - ""
+    - "&7&o(( Right-Click to warp ))"
+
+blockedBlocks:
+  - "GenGummy"
+
+messages:
+  createInvalid: "&c&lShops &7| Invalid usage try: /shops create <id> <price>"
+  noRegion: "&c&lShops &7| No region found"
+  shopCreated: "&c&lShops &7| Shop created"
+  noShop: "&c&lShops &7| You do not have a shop yet, purchase one in /shops"
+  nameInvalid: "&c&lShops &7| Invalid usage try: /shops setname <id> <name>"
+  descriptionInvalid: "&c&lShops &7| Invalid usage try: /shops setdescription <id> <description>"
+  shopPurchased: "&c&lShops &7| Shop lot has been purchased."
+  noFunds: "&c&lShops &7| Insufficient money"

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="Tisbury-ServerDB" uuid="94c3fb67-580a-465f-addc-59e1ed6e197e">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MARIADB" exact-version="0" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>spongebob</user-name>
+      <schema-mapping />
+    </data-source>
+  </component>
+</project>
