@@ -8,3 +8,6 @@ website: thealater.com
 softdepend: [HolographicDisplays]
 commands:
   shops:
+    description: shops
+  newshops:
+      description: new shops

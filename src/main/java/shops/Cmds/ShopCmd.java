@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ShopCmd implements CommandExecutor {
+    //TODO: Help command
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         Player p = (Player) commandSender;

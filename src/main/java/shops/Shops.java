@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.Plugin;
+import shops.Cmds.CmdManager;
 import shops.Cmds.ShopCmd;
 import shops.Utils.Utils;
 import net.milkbowl.vault.chat.Chat;
@@ -20,6 +21,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
 import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
+import shops.menus.MenuManager;
+
 import java.sql.*;
 import java.util.List;
 
@@ -33,12 +36,14 @@ public final class Shops extends JavaPlugin implements Listener {
     private static Economy econ = null;
     private static Permission perms = null;
     private static Chat chat = null;
+    private static MenuManager menuManager;
     private boolean useHolographicDisplays;
 
 
     @Override
     public void onEnable() {
         instance = this;
+        menuManager = new MenuManager();
         useHolographicDisplays = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
         if (!setupEconomy() ) {
             getServer().getPluginManager().disablePlugin(this);
@@ -64,7 +69,9 @@ public final class Shops extends JavaPlugin implements Listener {
             e.printStackTrace();
         }
 
+        // Register Commands
         getCommand("shops").setExecutor(new ShopCmd());
+        getCommand("newshops").setExecutor(new CmdManager());
 
         saveDefaultConfig();
 
@@ -169,6 +176,10 @@ public final class Shops extends JavaPlugin implements Listener {
         }
 
         return CoreProtect;
+    }
+
+    public static MenuManager getMenuManager() {
+        return menuManager;
     }
 
 
