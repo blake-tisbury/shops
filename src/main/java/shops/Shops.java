@@ -43,7 +43,6 @@ public final class Shops extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
-        menuManager = new MenuManager();
         useHolographicDisplays = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
         if (!setupEconomy() ) {
             getServer().getPluginManager().disablePlugin(this);
@@ -76,6 +75,7 @@ public final class Shops extends JavaPlugin implements Listener {
         saveDefaultConfig();
 
         saveResource("warpsGui.yml", false);
+        menuManager = new MenuManager();
 
         Bukkit.getPluginManager().registerEvents(this, this);
     }

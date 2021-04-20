@@ -9,7 +9,5 @@ softdepend: [HolographicDisplays]
 commands:
   shops:
     description: shops
-    usage: /<command>
   newshops:
       description: new shops
-      usage: /<command>

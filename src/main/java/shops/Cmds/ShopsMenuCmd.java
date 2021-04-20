@@ -16,7 +16,6 @@ public class ShopsMenuCmd extends BaseCmd {
     public boolean runCommand() {
         MenuManager menuManager = Shops.getMenuManager();
         menuManager.showMenu((Player) getSender());
-        getSender().sendMessage("[Shops] Menu showing.");
         return true;
     }
 }
