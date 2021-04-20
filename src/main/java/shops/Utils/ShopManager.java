@@ -1,25 +1,37 @@
 package shops.Utils;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import shops.Shops;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-
+import org.bukkit.ChatColor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
+import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
+import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
-public class ShopManager {
+public class ShopManager{
 
     Statement statement;
     Shops shops;
+
+
+
+
 
     public ShopManager(Shops plugin) {
         this.shops = plugin;
@@ -30,10 +42,17 @@ public class ShopManager {
         }
     }
 
-    public void CreateHotel(String id, Location l, int i) {
+    public void CreateShop(String id, Location l, Location h, int i, Shops plugin) {
+        this.shops = plugin;
         String s = l.getWorld().getName() + ";" + l.getX() + ";" + l.getY() + ";" + l.getZ();
+        String d = h.getWorld().getName() + ";" + h.getX() + ";" + (h.getY()+ 3) + ";" + h.getZ();
         try {
             statement.executeUpdate("INSERT INTO shops (id, owner, Warp, price) VALUES ('" + id  + "', 'null', '" + s + "', '"+ i +"')");
+            final Hologram hologram = HologramsAPI.createHologram(shops, h);
+            hologram.appendTextLine(ChatColor.YELLOW + "" + ChatColor.BOLD + "For rent! " + ChatColor.GREEN + "Use /shop buy to rent!" );
+
+
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -113,6 +132,21 @@ public class ShopManager {
         return loc;
     }
 
+    public Location getHolo(String id) {
+        Location loc = null;
+        ResultSet rs = null;
+        try {
+            rs = statement.executeQuery("SELECT * FROM shops WHERE id='"+id+"'");
+            if(rs.next()) {
+                String locString = rs.getString("holo");
+                String[] split = locString.split(";");
+                loc = new Location(Bukkit.getWorld(split[0]), Double.valueOf(split[1]), Double.valueOf(split[2]), Double.valueOf(split[3]));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return loc;
+    }
     public String getOwner(String id) {
         ResultSet rs = null;
         try {

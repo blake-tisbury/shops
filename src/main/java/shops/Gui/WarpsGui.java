@@ -1,5 +1,6 @@
 package shops.Gui;
 
+
 import com.google.gson.internal.$Gson$Preconditions;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.*;
@@ -18,8 +19,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
+import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
+import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
+
+
+
 
 public class WarpsGui {
+
 
     Shops shops = Shops.getInstance();
     private YamlConfiguration config = Utils.loadConfig("/warpsGui.yml");
@@ -90,9 +98,14 @@ public class WarpsGui {
                 p.closeInventory();
             } else if(slot.get(s).equals("unclaimed")) {
                 String id = idSlot.get(s);
+                Location l = sm.getHolo(id);
                 sm.setOwner(p, id);
                 sm.setName(p.getName(), id);
                 sm.setDescription("", id);
+
+                // Hologram hologram = HologramsAPI.createHologram(HolographicDisplays, l);
+                // textLine = hologram.appendTextLine("A hologram line");
+
                 if(econ.getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) < Integer.valueOf(sm.getPrice(id))) {
                     p.sendMessage(Utils.chat(shops.getConfig().getString("messages.noFunds")));
                     return;

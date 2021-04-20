@@ -1,5 +1,6 @@
 package shops;
 
+
 import net.coreprotect.CoreProtect;
 import net.coreprotect.CoreProtectAPI;
 import org.bukkit.block.Block;
@@ -16,7 +17,9 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
+import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
+import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
+import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import java.sql.*;
 import java.util.List;
 
@@ -30,12 +33,13 @@ public final class Shops extends JavaPlugin implements Listener {
     private static Economy econ = null;
     private static Permission perms = null;
     private static Chat chat = null;
+    private boolean useHolographicDisplays;
 
 
     @Override
     public void onEnable() {
         instance = this;
-
+        useHolographicDisplays = Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays");
         if (!setupEconomy() ) {
             getServer().getPluginManager().disablePlugin(this);
             return;
@@ -80,22 +84,19 @@ public final class Shops extends JavaPlugin implements Listener {
         Player p = e.getPlayer();
         Block b = e.getBlock();
 
-        CoreProtectAPI CoreProtect = getCoreProtect();
-        if (CoreProtect!=null){ //Ensure we have access to the API
-            List<String[]> lookup = CoreProtect.blockLookup(b, 0);
-            if (lookup!=null){
-                for (String[] value : lookup){
-                    CoreProtectAPI.ParseResult result = CoreProtect.parseResult(value);
-                    List<String> blocked = this.getConfig().getStringList("blockedBlocks");
-                    if(blocked.contains(result.getPlayer()) && !p.isOp()) {
-                        e.setCancelled(true);
-                    } else {
-                        return;
-                    }
-                }
+        CoreProtectAPI coreProtect = getCoreProtect();
+
+        if (coreProtect != null) {
+            if (!coreProtect.hasPlaced(p.getName(), b, 0, 0) && !p.isOp()) {
+                e.setCancelled(true);
+                // p.sendMessage("Sorry, you cant break that!");
+            } else if (coreProtect.hasPlaced(p.getName(), b, 0, 0) || p.isOp()) {
+                getServer().getConsoleSender().sendMessage("You were the one that placed it, grats (or you're op)");
+
+            } else {
+                getServer().getConsoleSender().sendMessage("Your plugin sucks ass kys and delete java'");
             }
         }
-
     }
 
     public static Shops getInstance() {
@@ -170,4 +171,10 @@ public final class Shops extends JavaPlugin implements Listener {
         return CoreProtect;
     }
 
+
+
+    // Plugin plugin = ... // Your plugin's instance
+    // Location where = ... // A Location object
+    // Hologram hologram = HologramsAPI.createHologram(plugin, where);
+    // textLine = hologram.appendTextLine("A hologram line");
 }

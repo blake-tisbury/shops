@@ -1,9 +1,10 @@
 name: Shops
-version: 1.0-SNAPSHOT
+version: 0.9-SNAPSHOT
 main: shops.Shops
 api-version: 1.16
-authors: [ Mason ]
+authors: [Blake, Jorge, Mason]
 description: ShopPlugin
-website: masonking.dev
+website: thealater.com
+softdepend: [HolographicDisplays]
 commands:
   shops:

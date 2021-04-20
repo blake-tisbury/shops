@@ -70,7 +70,8 @@ public class ShopCmd implements CommandExecutor {
                   r.setFlag(Flags.PVP, StateFlag.State.DENY);
                   rm.addRegion(r);
                   Location centerFloor = new Location(p.getWorld(), region.getCenter().getX(), region.getMinimumPoint().getY() + 1, region.getCenter().getZ());
-                  sm.CreateHotel(args[1], centerFloor, Integer.valueOf(args[2]));
+                  Location centerHolo = new Location(p.getWorld(), region.getCenter().getX(), region.getMinimumPoint().getY() + 3, region.getCenter().getZ());
+                  sm.CreateShop(args[1], centerFloor, centerHolo, Integer.valueOf(args[2]), shops);
                   p.sendMessage(Utils.chat(config.getString("messages.shopCreated")));
               }
         } else if(args[0].equalsIgnoreCase("setname")) {
@@ -106,9 +107,9 @@ public class ShopCmd implements CommandExecutor {
                     double X = (region.getMinimumPoint().getX() + region.getMaximumPoint().getX())/2;
                     double Y = region.getMinimumPoint().getY() + 1;
                     double Z = (region.getMinimumPoint().getZ() + region.getMaximumPoint().getZ())/2;
-
+                    Location centerHolo = new Location(p.getWorld(), X , Y, Z);
                     Location centerFloor = new Location(p.getWorld(), X , Y, Z);
-                    sm.CreateHotel(String.valueOf(i), centerFloor, i);
+                    sm.CreateShop(String.valueOf(i), centerFloor, centerHolo, i, shops);
                 }
                 p.sendMessage(Utils.chat("&c&lShops &7| Shops imported"));
             } else {

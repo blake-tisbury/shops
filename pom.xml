@@ -79,6 +79,10 @@
             <id>coreprotect-repo</id>
             <url>http://maven.playpro.com</url>
         </repository>
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -110,6 +114,12 @@
             <groupId>net.coreprotect</groupId>
             <artifactId>coreprotect</artifactId>
             <version>19.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
+            <artifactId>holographicdisplays-api</artifactId>
+            <version>2.4.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
