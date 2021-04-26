@@ -3,8 +3,8 @@ package shops.Cmds;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import shops.Shops;
-import shops.menus.MenuManager;
+import shops.Gui.BaseGui;
+import shops.Gui.ShopsGui;
 
 public class ShopsMenuCmd extends BaseCmd {
 
@@ -14,8 +14,9 @@ public class ShopsMenuCmd extends BaseCmd {
 
     @Override
     public boolean runCommand() {
-        MenuManager menuManager = Shops.getMenuManager();
-        menuManager.showMenu((Player) getSender());
+        Player p = (Player) getSender();
+        ShopsGui gui = new ShopsGui();
+        gui.show(p);
         return true;
     }
 }

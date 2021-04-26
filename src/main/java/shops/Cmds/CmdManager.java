@@ -10,17 +10,17 @@ public class CmdManager implements CommandExecutor {
         BaseCmd cmd;
 
         if (args.length < 1) {
-            sender.sendMessage("[Shops] Invalid command.");
-            return true;
+            cmd = new ShopsMenuCmd(sender, command, label, args);
         }
-
-        switch (args[0]) {
-            case "menu":
-                cmd = new ShopsMenuCmd(sender, command, label, args);
-                break;
-            default:
-                sender.sendMessage("[Shops] \"" + args[0] + "\" is not a valid command.");
-                return true;
+        else {
+            switch (args[0]) {
+                case "menu":
+                    cmd = new ShopsMenuCmd(sender, command, label, args);
+                    break;
+                default:
+                    sender.sendMessage("[Shops] \"" + args[0] + "\" is not a valid command.");
+                    return true;
+            }
         }
 
         return cmd.runCommand();

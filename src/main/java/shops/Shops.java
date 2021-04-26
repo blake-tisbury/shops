@@ -3,14 +3,17 @@ package shops;
 
 import net.coreprotect.CoreProtect;
 import net.coreprotect.CoreProtectAPI;
+import net.tnemc.core.TNE;
+import net.tnemc.core.common.api.TNEAPI;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.Plugin;
+import shops.Cmds.CmdCompleter;
 import shops.Cmds.CmdManager;
-import shops.Cmds.ShopCmd;
+import shops.Utils.ShopManager;
 import shops.Utils.Utils;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
@@ -21,6 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
 import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
+import shops.listeners.ShopMenuListener;
 import shops.menus.MenuManager;
 
 import java.sql.*;
@@ -33,10 +37,11 @@ public final class Shops extends JavaPlugin implements Listener {
     String host = this.getConfig().getString("host"), port = this.getConfig().getString("port"), database = this.getConfig().getString("database"), username = this.getConfig().getString("username"), password = this.getConfig().getString("password");
     public Connection connection;
 
-    private static Economy econ = null;
+    private static TNEAPI econ = null;
     private static Permission perms = null;
     private static Chat chat = null;
     private static MenuManager menuManager;
+    private static ShopManager shopManager;
     private boolean useHolographicDisplays;
 
 
@@ -51,31 +56,21 @@ public final class Shops extends JavaPlugin implements Listener {
         setupPermissions();
         setupChat();
 
-        try {
-            openConnection();
-            this.statement = connection.createStatement();
-            PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS shops (" +
-                    "id VARCHAR(32) PRIMARY KEY," +
-                    "owner VARCHAR(55) NOT NULL," +
-                    "warp VARCHAR(55)," +
-                    "name VARCHAR(32)," +
-                    "price INT," +
-                    "description VARCHAR(64)" +
-                    ");");
-            ps.executeUpdate();
-        } catch (ClassNotFoundException | SQLException e) {
-            Bukkit.getServer().getConsoleSender().sendMessage(Utils.chat("&c&LCould not enable due to invalid database"));
-            e.printStackTrace();
-        }
-
         // Register Commands
-        getCommand("shops").setExecutor(new ShopCmd());
-        getCommand("newshops").setExecutor(new CmdManager());
+        getCommand("shops").setExecutor(new CmdManager());
+        getCommand("shops").setTabCompleter(new CmdCompleter());
+
+        // Register Events
+        getServer().getPluginManager().registerEvents(new ShopMenuListener(), this);
 
         saveDefaultConfig();
+        initDB();
 
         saveResource("warpsGui.yml", false);
+
+        // Init Managers
         menuManager = new MenuManager();
+        shopManager = new ShopManager(this);
 
         Bukkit.getPluginManager().registerEvents(this, this);
     }
@@ -111,14 +106,7 @@ public final class Shops extends JavaPlugin implements Listener {
     }
 
     private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        econ = rsp.getProvider();
+        econ = TNE.instance().api();
         return econ != null;
     }
 
@@ -144,7 +132,7 @@ public final class Shops extends JavaPlugin implements Listener {
                 this.username, this.password);
     }
 
-    public static Economy getEconomy() {
+    public static TNEAPI getEconomy() {
         return econ;
     }
 
@@ -180,6 +168,27 @@ public final class Shops extends JavaPlugin implements Listener {
 
     public static MenuManager getMenuManager() {
         return menuManager;
+    }
+
+    public static ShopManager getShopManager() { return shopManager; }
+
+    public void initDB() {
+        try {
+            openConnection();
+            this.statement = connection.createStatement();
+            PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS shops (" +
+                    "id VARCHAR(32) PRIMARY KEY," +
+                    "owner VARCHAR(55) NOT NULL," +
+                    "warp VARCHAR(55)," +
+                    "name VARCHAR(32)," +
+                    "price INT," +
+                    "description VARCHAR(64)" +
+                    ");");
+            ps.executeUpdate();
+        } catch (ClassNotFoundException | SQLException e) {
+            Bukkit.getServer().getConsoleSender().sendMessage(Utils.chat("&c&LCould not enable due to invalid database"));
+            e.printStackTrace();
+        }
     }
 
 

@@ -19,7 +19,6 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import shops.Gui.WarpsGui;
 import shops.Shops;
 import shops.Utils.ShopManager;
 import shops.Utils.Utils;
@@ -42,8 +41,6 @@ public class ShopCmd implements CommandExecutor {
         ShopManager sm = new ShopManager(shops);
         FileConfiguration config = shops.getConfig();
         if(args.length == 0) {
-            WarpsGui warpsGui = new WarpsGui();
-            warpsGui.gui().show(p);
             return false;
         } else if(args[0].equalsIgnoreCase("create")) {
             if(!(p.hasPermission("shops.region.create"))) return false;

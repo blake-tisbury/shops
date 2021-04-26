@@ -1,31 +1,28 @@
-package shops.menus;
+package shops.Gui;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
+import shops.Gui.actions.*;
 import shops.Shops;
 import shops.Utils.ShopManager;
 import shops.Utils.Utils;
 
 import java.util.*;
 
-public class MenuManager {
+//TODO: Buy confirmation screen
+//TODO: Personal shops screen
+
+public class ShopsGui extends BaseGui {
 
     private Plugin plugin;
-    private final MenuManager gui;
-
     private int maxPageSize;
     private int maxShopsPerPage;
     private int currPage;
@@ -36,14 +33,14 @@ public class MenuManager {
     private int exitSlot;
     private Inventory inv;
     private String title;
-    private HashMap<String, ItemStack> menuSlots;
+    private static HashMap<String, ItemStack> menuSlots;
     private List<String> shopIds;
     private ShopManager sm;
-    private static ArrayList<String> viewing;
 
-    public MenuManager() {
+    public ShopsGui() {
+        super(54, "Shops");
+
         this.plugin = Shops.getInstance();
-        this.gui = this;
         this.maxPageSize = 54;
         this.maxShopsPerPage = 45;
         this.numShops = 0;
@@ -53,92 +50,67 @@ public class MenuManager {
         this.exitSlot = 49;
         this.title = "Shops Menu";
         this.menuSlots = new HashMap<String, ItemStack>();
-        this.sm = new ShopManager((Shops) this.plugin);
-        viewing = new ArrayList<String>();
+        this.sm = Shops.getShopManager();
+
+        initMenuSlots();
+    }
+
+    @Override
+    public void show(Player p) {
+        // Fill the inventory menu with the appropriate heads.
+        refresh();
+
+        p.openInventory(getGui());
+        openGuis.put(p.getUniqueId(), getUuid());
     }
 
     /**
-     * Initialize inventory object to represent our menu
+     * Refresh GUI with current object field values
      */
-    public void buildMenu() {
-        this.inv = Bukkit.createInventory(null, this.maxPageSize, this.title);
-
-        // Init Shop IDs list
-        refreshShopIds();
-
-        // Init the HashMap to represent shops and their associated player heads
-        initMenuSlots();
-
-        // Fill the inventory menu with the appropriate heads.
+    public void refresh() {
+        getGui().clear();
         fillShopMenu();
-
         fillBottomMenuBar();
     }
 
-    public void updateMenu(Inventory inv) {
-        // Fill the inventory menu with the appropriate heads.
-        fillShopMenu(inv);
-        fillBottomMenuBar(inv);
-    }
-
-
     /**
-     * Show this inventory/menu to the given player
-     * @param p player to be shown to
+     * Fill the shops sections of the shop menu with player heads
      */
-    public void showMenu(Player p) {
-        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-            p.openInventory(getInventory());
-        }, 3);
-    }
-
-    /**
-     * Sets item slot specifically based off index
-     * @param slot slot index to fill
-     * @param item item to fill with
-     */
-    public void setMenuSlot(int slot, ItemStack item) {
-        getInventory().setItem(slot, item);
-    }
-
-    public void setMenuSlot(int slot, ItemStack item, Inventory inv) {
-        inv.setItem(slot, item);
-    }
-
     public void fillShopMenu() {
-        fillShopMenu(getInventory());
-    }
-
-    public void fillShopMenu(Inventory inv) {
         int currPageMin = this.currPage * this.maxShopsPerPage;
         int currPageMax = currPageMin + this.maxShopsPerPage;
-        System.out.println("[TESTING] min: " + currPageMin + " max: " + currPageMax + " shops: " + numShops + " array size:" + this.menuSlots.values().toArray().length);
 
         for (int i = currPageMin; i < currPageMax; i++) {
             if (i >= this.numShops) {
                 return;
             }
-            ItemStack item = (ItemStack) this.menuSlots.values().toArray()[i];
-            setMenuSlot(i - currPageMin, item, inv);
-        }
-    }
 
-    public void fillBottomMenuBar() {
-        fillBottomMenuBar(getInventory());
+            ItemStack item = menuSlots.get(shopIds.get(i));
+            Bukkit.getConsoleSender().sendMessage("ID: " + i);
+            if (item.getItemMeta().getDisplayName().contains("Unclaimed")) {
+                setItem(i - currPageMin, item, new BuyShop(i));
+            }
+            else {
+                setItem(i - currPageMin, item, new WarpShop(i));
+            }
+        }
     }
 
     /**
      * Adds the Next, Prev, and Exit buttons to the menu
      */
-    public void fillBottomMenuBar(Inventory inv) {
+    public void fillBottomMenuBar() {
         ItemStack filler = new ItemStack(Material.GRAY_STAINED_GLASS, 1);
         ItemStack exit = new ItemStack(Material.BARRIER, 1);
+        GuiAction nextPage = new NextPage();
+        GuiAction prevPage = new PrevPage();
+        GuiAction exitMenu = new Exit();
 
         // Fill in Glass Panes on Bottom
         for (int i = this.maxPageSize - 9; i < this.maxPageSize; i++) {
             ItemMeta fillerMeta = filler.getItemMeta();
             fillerMeta.setDisplayName("");
-            setMenuSlot(i, filler, inv);
+            setItem(i, filler);
         }
 
         // If more than one page, add next button
@@ -148,7 +120,7 @@ public class MenuManager {
             nextMeta.setDisplayName(ChatColor.RED + "Next Page");
             nextMeta.setLore(Arrays.asList("Click here to go forward a page"));
             nextArrow.setItemMeta(nextMeta);
-            setMenuSlot(this.nextSlot, nextArrow, inv);
+            setItem(this.nextSlot, nextArrow, nextPage);
         }
 
         // If current page isn't 0, add previous button
@@ -158,14 +130,14 @@ public class MenuManager {
             prevMeta.setDisplayName(ChatColor.RED + "Previous Page");
             prevMeta.setLore(Arrays.asList("Click here to go back a page"));
             prevArrow.setItemMeta(prevMeta);
-            setMenuSlot(this.prevSlot, prevArrow, inv);
+            setItem(this.prevSlot, prevArrow, prevPage);
         }
 
         ItemMeta exitMeta = exit.getItemMeta();
         exitMeta.setDisplayName(ChatColor.RED + "Exit");
         exitMeta.setLore(Arrays.asList("Click here to close"));
         exit.setItemMeta(exitMeta);
-        setMenuSlot(this.exitSlot, exit, inv);
+        setItem(this.exitSlot, exit, exitMenu);
     }
 
     /**
@@ -217,8 +189,8 @@ public class MenuManager {
             // Set item meta back to item and add to HashMap
             skullMeta.setLore(headLore);
             item.setItemMeta(skullMeta);
-            this.menuSlots.put(id, item);
-            this.numShops = this.menuSlots.size();
+            menuSlots.put(id, item);
+            this.numShops = menuSlots.size();
             this.numPages = this.numShops / this.maxShopsPerPage;
 
             if (this.numShops % this.maxShopsPerPage != 0) {
@@ -227,35 +199,27 @@ public class MenuManager {
         }
     }
 
-    public void addViewing(Player p) {
-        viewing.add(p.getName());
-    }
-
-    public static ArrayList<String> getViewing() {
-        return viewing;
-    }
-
-    // Getters
-    public Inventory getInventory() {
-        if (this.inv == null) {
-            buildMenu();
+    /**
+     * Increment currPage value and refresh
+     */
+    public void nextPage() {
+        if (this.currPage < this.numPages - 1) {
+            this.currPage++;
+            refresh();
         }
-        return this.inv;
     }
 
-    public MenuManager getGui() {
-        return this.gui;
+    /**
+     * Decrement currPage value and refresh
+     */
+    public void prevPage() {
+        if (this.currPage > 0) {
+            this.currPage--;
+            refresh();
+        }
     }
 
-    public void setCurrPage(int currPage) {
-        this.currPage = currPage;
-    }
-
-    public void setNumShops(int numShops) {
-        this.numShops = numShops;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public static HashMap<String, ItemStack> getMenuSlots() {
+        return menuSlots;
     }
 }
