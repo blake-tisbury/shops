@@ -1,10 +1,22 @@
 package shops.Utils;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.sk89q.worldedit.IncompleteRegionException;
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.session.SessionManager;
+import com.sk89q.worldedit.util.formatting.text.TextComponent;
+import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,10 +41,6 @@ public class ShopManager{
     Statement statement;
     Shops shops;
 
-
-
-
-
     public ShopManager(Shops plugin) {
         this.shops = plugin;
         try {
@@ -42,20 +50,88 @@ public class ShopManager{
         }
     }
 
-    public void CreateShop(String id, Location l, Location h, int i, Shops plugin) {
-        this.shops = plugin;
-        String s = l.getWorld().getName() + ";" + l.getX() + ";" + l.getY() + ";" + l.getZ();
-        String d = h.getWorld().getName() + ";" + h.getX() + ";" + (h.getY()+ 3) + ";" + h.getZ();
+    public void createShop(String id, Location warpLoc, Location holoLoc, int price, Player p) {
+        double warpX, warpY, warpZ, holoX, holoY, holoZ;
+        Region region = createShopRegion(p, id);
+
+        if (region == null) {
+            return;
+        }
+
+        if (warpLoc == null) {
+            warpX = region.getCenter().getX();
+            warpY = region.getMinimumPoint().getY() + 1;
+            warpZ = region.getCenter().getZ();
+        }
+        else {
+            warpX = warpLoc.getX();
+            warpY = warpLoc.getY();
+            warpZ = warpLoc.getZ();
+        }
+        warpLoc = new Location(p.getWorld(), warpX, warpY, warpZ);
+
+        if (holoLoc == null)  {
+            holoX = region.getCenter().getX();
+            holoY = region.getMinimumPoint().getY() + 1;
+            holoZ = region.getCenter().getZ();
+        }
+        else {
+            holoX = holoLoc.getX();
+            holoY = holoLoc.getY();
+            holoZ = holoLoc.getZ();
+        }
+        holoLoc = new Location(p.getWorld(), holoX, holoY, holoZ);
+
+
+        String warpCoords = warpLoc.getWorld().getName() + ";" + warpX + ";" + warpY + ";" + warpZ;
+        String holoCoords = holoLoc.getWorld().getName() + ";" + holoX + ";" + (holoY + 3) + ";" + holoZ;
+
         try {
-            statement.executeUpdate("INSERT INTO shops (id, owner, Warp, price) VALUES ('" + id  + "', 'null', '" + s + "', '"+ i +"')");
-            final Hologram hologram = HologramsAPI.createHologram(shops, h);
+            statement.executeUpdate("INSERT INTO shops (id, owner, Warp, price) VALUES ('" + id  + "', 'null', '" + warpCoords + "', '" + price +"')");
+            final Hologram hologram = HologramsAPI.createHologram(shops, holoLoc);
             hologram.appendTextLine(ChatColor.YELLOW + "" + ChatColor.BOLD + "For rent! " + ChatColor.GREEN + "Use /shop buy to rent!" );
-
-
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
+        p.sendMessage(Utils.chat(Shops.getInstance().getConfig().getString("messages.shopCreated")));
+    }
+
+    public Region createShopRegion(Player p, String name) {
+        com.sk89q.worldedit.entity.Player actor = BukkitAdapter.adapt(p);
+        SessionManager manager = WorldEdit.getInstance().getSessionManager();
+        LocalSession ls = manager.get(actor);
+        Region region = null;
+        World selectionWorld = ls.getSelectionWorld();
+
+        // Create Region
+        try {
+            if(selectionWorld == null) throw new IncompleteRegionException();
+            region = ls.getSelection(selectionWorld);
+            if (region == null) {
+                throw new IncompleteRegionException();
+            }
+        } catch (IncompleteRegionException e) {
+            actor.print(TextComponent.of(Utils.chat(Shops.getInstance().getConfig().getString("messages.noRegion"))));
+            return null;
+        }
+
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        RegionManager rm = container.get(BukkitAdapter.adapt(p.getWorld()));
+
+        ProtectedCuboidRegion r = new ProtectedCuboidRegion(name, region.getMaximumPoint(), region.getMinimumPoint());
+
+        // Set WorldGuard Flags
+        r.setFlag(Flags.BLOCK_PLACE, StateFlag.State.DENY);
+        r.setFlag(Flags.BLOCK_BREAK, StateFlag.State.DENY);
+        r.setFlag(Flags.PVP, StateFlag.State.DENY);
+        rm.addRegion(r);
+
+        // Set Warp/Holos
+//        Location warpLoc = new Location(p.getWorld(), warpX, region.getMinimumPoint().getY() + 1, warpZ);
+//        Location holoLoc = new Location(p.getWorld(), holoX, region.getMinimumPoint().getY() + 3, holoZ);
+
+        return region;
     }
 
     public void setOwner(Player p, String id) {
@@ -80,8 +156,8 @@ public class ShopManager{
         ResultSet rs = null;
         try {
             rs = statement.executeQuery("SELECT * FROM shops WHERE id='"+id+"'");
-            if(rs.next()) {
-                if(rs.getString("owner").equals(p.getUniqueId().toString())) {
+            if (rs.next()) {
+                if (rs.getString("owner").equals(p.getUniqueId().toString())) {
                     return true;
                 } else {
                     return false;

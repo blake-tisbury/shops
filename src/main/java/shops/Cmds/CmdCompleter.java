@@ -5,36 +5,29 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CmdCompleter implements TabCompleter {
+
     @Override
     public List<String> onTabComplete (CommandSender sender, Command command, String label, String[] args) {
+        List<String> completions = new ArrayList<>();
+        List<String> commands = new ArrayList<>();
 
-        if (command.getName().equals("shops")) {
-            List<String> list = new ArrayList<>();
-            if (args.length < 1) {
-                list.add("create");
-                list.add("menu");
-                list.add("remove");
-                return list;
-            }
-
-            switch (args[0]) {
-                case "create":
-                    for (Player p : Bukkit.getOnlinePlayers()) {
-                        list.add(p.getName());
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-            return list;
+        if (args.length == 1) {
+            commands.add("create");
+            commands.add("menu");
+            commands.add("setdescription");
+            commands.add("setname");
+            StringUtil.copyPartialMatches(args[0], commands, completions);
         }
 
-        return null;
+        Collections.sort(completions);
+        return completions;
     }
 }

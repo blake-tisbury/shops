@@ -86,7 +86,6 @@ public class ShopsGui extends BaseGui {
             }
 
             ItemStack item = menuSlots.get(shopIds.get(i));
-            Bukkit.getConsoleSender().sendMessage("ID: " + i);
             if (item.getItemMeta().getDisplayName().contains("Unclaimed")) {
                 setItem(i - currPageMin, item, new BuyShop(i));
             }
@@ -169,12 +168,7 @@ public class ShopsGui extends BaseGui {
 
                 // Add shop information to head
                 for (String ls : this.plugin.getConfig().getStringList("claimedLore")) {
-                    headLore.add(Utils.chat(ls.replace("{id}", id).replace("{player}", shopOwner.getName()).replace("{description}", "")));
-                    if (ls.contains("{description}")) {
-                        for (String s2 : Utils.split(sm.getDescription(id))) {
-                            headLore.add(Utils.chat("&7" + s2));
-                        }
-                    }
+                    headLore.add(Utils.chat(ls.replace("{id}", id).replace("{player}", shopOwner.getName()).replace("{description}", sm.getDescription(id))));
                 }
             }
             else {
