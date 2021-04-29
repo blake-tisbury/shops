@@ -18,7 +18,7 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.configuration.file.FileConfiguration;
 import shops.Shops;
 import shops.managers.ShopManager;
-import shops.Utils.Utils;
+import shops.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

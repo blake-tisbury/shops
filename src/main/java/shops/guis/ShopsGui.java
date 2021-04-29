@@ -13,7 +13,7 @@ import org.bukkit.plugin.Plugin;
 import shops.guis.actions.*;
 import shops.Shops;
 import shops.managers.ShopManager;
-import shops.Utils.Utils;
+import shops.utils.Utils;
 
 import java.util.*;
 

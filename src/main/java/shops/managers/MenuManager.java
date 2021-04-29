@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 import shops.Shops;
-import shops.Utils.Utils;
+import shops.utils.Utils;
 
 import java.util.*;
 

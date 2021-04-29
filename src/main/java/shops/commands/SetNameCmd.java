@@ -7,7 +7,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import shops.Shops;
 import shops.managers.ShopManager;
-import shops.Utils.Utils;
+import shops.utils.Utils;
 
 public class SetNameCmd extends BaseCmd {
 

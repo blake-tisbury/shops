@@ -14,7 +14,7 @@ import org.bukkit.plugin.Plugin;
 import shops.commands.CmdCompleter;
 import shops.commands.CmdManager;
 import shops.managers.ShopManager;
-import shops.Utils.Utils;
+import shops.utils.Utils;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;

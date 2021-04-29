@@ -7,7 +7,7 @@ import shops.guis.BaseGui;
 import shops.guis.ShopsGui;
 import shops.Shops;
 import shops.managers.ShopManager;
-import shops.Utils.Utils;
+import shops.utils.Utils;
 
 import java.math.BigDecimal;
 import java.util.HashMap;

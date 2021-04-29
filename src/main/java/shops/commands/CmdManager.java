@@ -5,7 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import shops.Shops;
-import shops.Utils.Utils;
+import shops.utils.Utils;
 
 public class CmdManager implements CommandExecutor {
     @Override
