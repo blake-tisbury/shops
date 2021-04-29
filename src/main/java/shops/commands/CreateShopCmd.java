@@ -1,4 +1,4 @@
-package shops.Cmds;
+package shops.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

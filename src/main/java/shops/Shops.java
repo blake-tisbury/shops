@@ -11,24 +11,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.Plugin;
-import shops.Cmds.CmdCompleter;
-import shops.Cmds.CmdManager;
-import shops.Utils.ShopManager;
+import shops.commands.CmdCompleter;
+import shops.commands.CmdManager;
+import shops.managers.ShopManager;
 import shops.Utils.Utils;
 import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
-import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
-import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import shops.listeners.ShopMenuListener;
-import shops.menus.MenuManager;
+import shops.managers.MenuManager;
 
 import java.sql.*;
-import java.util.List;
 
 public final class Shops extends JavaPlugin implements Listener {
 

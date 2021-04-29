@@ -1,4 +1,4 @@
-package shops.Gui.actions;
+package shops.guis.actions;
 
 import org.bukkit.entity.Player;
 

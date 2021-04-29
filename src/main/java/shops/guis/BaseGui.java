@@ -1,10 +1,10 @@
-package shops.Gui;
+package shops.guis;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import shops.Gui.actions.GuiAction;
+import shops.guis.actions.GuiAction;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package shops.Cmds;
+package shops.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import shops.Shops;
-import shops.Utils.ShopManager;
+import shops.managers.ShopManager;
 import shops.Utils.Utils;
 
 public class SetNameCmd extends BaseCmd {

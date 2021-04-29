@@ -1,21 +1,19 @@
-package shops.Gui.actions;
+package shops.guis.actions;
 
 import org.bukkit.entity.Player;
-import shops.Gui.BaseGui;
-import shops.Gui.ShopsGui;
+import shops.guis.BaseGui;
 
 import java.util.UUID;
 
-public class NextPage implements GuiAction {
-
+public class Exit implements GuiAction {
     @Override
     public void click(Player p) {
         UUID playerUUID = p.getUniqueId();
 
         UUID guiUUID = BaseGui.openGuis.get(playerUUID);
         if (guiUUID != null) {
-            ShopsGui gui = (ShopsGui) BaseGui.getGuisByUuid().get(guiUUID);
-            gui.nextPage();
+            BaseGui gui = BaseGui.getGuisByUuid().get(guiUUID);
+            gui.close(p);
         }
     }
 }

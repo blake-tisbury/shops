@@ -5,11 +5,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import shops.Gui.BaseGui;
-import shops.Gui.actions.GuiAction;
-import shops.menus.MenuManager;
+import shops.guis.BaseGui;
+import shops.guis.actions.GuiAction;
 
 import java.util.UUID;
 

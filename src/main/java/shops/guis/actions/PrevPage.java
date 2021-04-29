@@ -1,8 +1,8 @@
-package shops.Gui.actions;
+package shops.guis.actions;
 
 import org.bukkit.entity.Player;
-import shops.Gui.BaseGui;
-import shops.Gui.ShopsGui;
+import shops.guis.BaseGui;
+import shops.guis.ShopsGui;
 
 import java.util.UUID;
 

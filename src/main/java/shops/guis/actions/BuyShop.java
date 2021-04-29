@@ -1,14 +1,12 @@
-package shops.Gui.actions;
+package shops.guis.actions;
 
 import net.tnemc.core.common.api.TNEAPI;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import shops.Gui.BaseGui;
-import shops.Gui.ShopsGui;
+import shops.guis.BaseGui;
+import shops.guis.ShopsGui;
 import shops.Shops;
-import shops.Utils.ShopManager;
+import shops.managers.ShopManager;
 import shops.Utils.Utils;
 
 import java.math.BigDecimal;

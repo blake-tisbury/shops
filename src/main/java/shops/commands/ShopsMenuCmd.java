@@ -1,10 +1,9 @@
-package shops.Cmds;
+package shops.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import shops.Gui.BaseGui;
-import shops.Gui.ShopsGui;
+import shops.guis.ShopsGui;
 
 public class ShopsMenuCmd extends BaseCmd {
 

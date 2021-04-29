@@ -1,4 +1,4 @@
-package shops.Gui;
+package shops.guis;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,9 +10,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
-import shops.Gui.actions.*;
+import shops.guis.actions.*;
 import shops.Shops;
-import shops.Utils.ShopManager;
+import shops.managers.ShopManager;
 import shops.Utils.Utils;
 
 import java.util.*;

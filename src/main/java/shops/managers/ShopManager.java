@@ -1,4 +1,4 @@
-package shops.Utils;
+package shops.managers;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.sk89q.worldedit.IncompleteRegionException;
@@ -35,6 +35,7 @@ import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
 import com.gmail.filoghost.holographicdisplays.api.line.ItemLine;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import shops.Utils.Utils;
 
 public class ShopManager{
 
