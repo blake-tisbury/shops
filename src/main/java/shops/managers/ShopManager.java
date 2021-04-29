@@ -25,15 +25,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import shops.objects.Shop;
 import shops.utils.Utils;
 
 public class ShopManager{
 
     Statement statement;
     Shops shops;
+    private static Map<String, Shop> shopMap;
 
     public ShopManager(Shops plugin) {
         this.shops = plugin;
@@ -76,6 +80,7 @@ public class ShopManager{
         }
         holoLoc = new Location(p.getWorld(), holoX, holoY, holoZ);
 
+        Shop shop = new Shop(id, p, price, warpLoc, holoLoc);
 
         String warpCoords = warpLoc.getWorld().getName() + ";" + warpX + ";" + warpY + ";" + warpZ;
         String holoCoords = holoLoc.getWorld().getName() + ";" + holoX + ";" + (holoY + 3) + ";" + holoZ;
