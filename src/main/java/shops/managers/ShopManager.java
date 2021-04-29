@@ -151,6 +151,28 @@ public class ShopManager{
         }
     }
 
+    /**
+     * Return a list of owner names.
+     * @return list of owner's names
+     */
+    public List<String> getOwners() {
+        ResultSet rs;
+        List<String> owners = new ArrayList<>();
+
+        try {
+            rs = statement.executeQuery("SELECT owner FROM shops");
+            if (rs.next()) {
+                if (rs.getString("owner") != null) {
+                    owners.add(rs.getString("owner"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return owners;
+    }
+
     public boolean isOwner(Player p, String id) {
         ResultSet rs = null;
         try {

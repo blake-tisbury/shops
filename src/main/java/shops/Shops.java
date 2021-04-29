@@ -11,9 +11,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 import shops.commands.CmdCompleter;
 import shops.commands.CmdManager;
+import shops.managers.RentManager;
 import shops.managers.ShopManager;
+import shops.tasks.ChargeRent;
 import shops.utils.Utils;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
@@ -37,6 +40,7 @@ public final class Shops extends JavaPlugin implements Listener {
     private static Chat chat = null;
     private static MenuManager menuManager;
     private static ShopManager shopManager;
+    private static RentManager rentManager;
     private boolean useHolographicDisplays;
 
 
@@ -66,6 +70,10 @@ public final class Shops extends JavaPlugin implements Listener {
         // Init Managers
         menuManager = new MenuManager();
         shopManager = new ShopManager(this);
+        rentManager = new RentManager(getEconomy());
+
+        // Tasks
+        BukkitTask task = new ChargeRent().runTaskTimer(this, 0, 36000);
 
         Bukkit.getPluginManager().registerEvents(this, this);
     }
@@ -165,7 +173,13 @@ public final class Shops extends JavaPlugin implements Listener {
         return menuManager;
     }
 
-    public static ShopManager getShopManager() { return shopManager; }
+    public static ShopManager getShopManager() {
+        return shopManager;
+    }
+
+    public static RentManager getRentManager() {
+        return rentManager;
+    }
 
     public void initDB() {
         try {
