@@ -35,3 +35,4 @@ messages:
   descriptionInvalid: "&c&lShops &7| Invalid usage try: /shops setdescription <id> <description>"
   shopPurchased: "&c&lShops &7| Shop lot has been purchased."
   noFunds: "&c&lShops &7| Insufficient money"
+  alreadyOwned: "&c&lShops &7| This shop is already owned."

@@ -38,6 +38,11 @@ public class BuyShop implements GuiAction {
             List<String> ids = sm.getIds();
             String id = ids.get(slot);
 
+            if (!sm.getOwner(id).equals("null")) {
+                p.sendMessage(Utils.chat(Shops.getInstance().getConfig().getString("messages.alreadyOwned")));
+                return;
+            }
+
             // Check if they have enough funds
             if (econ.getHoldings(p.getName()).doubleValue() < Integer.parseInt(sm.getPrice(id))) {
                 p.sendMessage(Utils.chat(Shops.getInstance().getConfig().getString("messages.noFunds")));

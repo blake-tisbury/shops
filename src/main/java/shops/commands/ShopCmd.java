@@ -27,6 +27,10 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 
+/**
+ * Deprecated af
+ */
+
 public class ShopCmd implements CommandExecutor {
     //TODO: Help command
     @Override
